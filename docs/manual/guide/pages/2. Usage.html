@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>2. Usage</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    <blockquote class="note">
+Configuring your LDAP server is beyond the scope of this document. There are many different approaches and this will most likely be done by IT staff. It's assumed here that you already have a running LDAP or Active Directory server.
+</blockquote><p class="paragraph"/>There isn't much that you need to do in your application to use LDAP. Just install this plugin, and configure any required parameters and whatever optional parameters you want in Config.groovy. These are described in detail in <a href="../guide/single.html#3. Configuration" class="guide">Chapter 3</a> but typically you only need to set these properties<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.ldap.context.managerDn = 'uid=admin,ou=system'
+grails.plugins.springsecurity.ldap.context.managerPassword = 'secret'
+grails.plugins.springsecurity.ldap.context.server = 'ldap://localhost:10389'
+grails.plugins.springsecurity.ldap.authorities.groupSearchBase = 'ou=groups,dc=yourcompany,dc=com'
+grails.plugins.springsecurity.ldap.search.base = 'dc=yourcompany,dc=com'</pre></div><p class="paragraph"/>Often all role information will be stored in LDAP, but if you want to also assign application-specific roles to users in the database, then add this<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.ldap.authorities.retrieveDatabaseRoles = <span class="java&#45;keyword">true</span></pre></div><p class="paragraph"/>to do an extra database lookup after the LDAP lookup.<p class="paragraph"/>Depending on how passwords are encrypted in LDAP you may also need to configure the encryption algorithm, e.g.<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.password.algorithm = 'SHA&#45;256'</pre></div><p class="paragraph"/><h4>Custom UserDetailsContextMapper</h4><p class="paragraph"/>There are three options for mapping LDAP attributes to <code>UserDetails</code> data (as specified by the <code>grails.plugins.springsecurity.ldap.mapper.userDetailsClass</code> config attribute) and hopefully one of those will be sufficient for your needs. If not, it's easy to implement <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/ldap/userdetails/UserDetailsContextMapper.html" target="blank">UserDetailsContextMapper</a> yourself.<p class="paragraph"/>Create a class in <code>src/groovy</code> or <code>src/java</code> that implements <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/ldap/userdetails/UserDetailsContextMapper.html" target="blank">UserDetailsContextMapper</a> and register it in <code>grails-app/conf/spring/resources.groovy</code>:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.mycompany.myapp.MyUserDetailsContextMapper<p class="paragraph"/>beans = &#123;
+   ldapUserDetailsMapper(MyUserDetailsContextMapper) &#123;
+      // bean attributes
+   &#125;
+&#125;</pre></div><p class="paragraph"/>
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
