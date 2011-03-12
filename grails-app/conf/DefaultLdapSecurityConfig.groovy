@@ -14,6 +14,7 @@
  */
 security {
 	ldap {
+		active = true
 		search { 
 			searchSubtree = true
 			base = '' // e.g. 'dc=example,dc=com', 'ou=users,dc=example,dc=com'
@@ -58,6 +59,20 @@ security {
 			groupSearchBase = 'ou=groups,dc=example,dc=com'
 			ignorePartialResultException = false
 			defaultRole = null
+		}
+		useRememberMe = false
+		rememberMe {
+			detailsManager {
+				passwordAttributeName = 'userPassword'
+				groupSearchBase = 'ou=groups,dc=example,dc=com'
+				groupRoleAttributeName = 'cn'
+				attributesToRetrieve = null // all
+				groupMemberAttributeName = 'uniquemember'
+			}
+			usernameMapper {
+				userDnBase = null // must be set, e.g. 'dc=example,dc=com', 'ou=users,dc=example,dc=com'
+				usernameAttribute = null // must be set, e.g. 'cn'
+			}
 		}
 	}
 }
